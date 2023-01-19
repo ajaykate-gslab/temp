@@ -1,0 +1,345 @@
+openapi: 3.0.1
+info:
+  title: chargebeeApis API
+  description: API's for Subscription records
+  contact:
+    name: Ajay Kate
+    url: http://chargebeeApis.com
+  version: '0.1'
+servers:
+  - url: http://localhost:8989
+#-------------------------------------PATHS ------------------------------------------------------
+paths:
+  /fetchCustomerById:
+    get:
+      description: fetch customer by id
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+
+  /insertCustomer:
+    description: Inserting Customer details
+    post:
+      summary: inserting new Customer
+      requestBody:
+        $ref: '#/components/requestBodies/CustomerBody'
+      responses:
+        200:
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        400:
+          $ref: '#/components/responses/BadRequest'
+
+
+
+  /fetchAllCustomers:
+    description: Fetching all Customers records
+    get:
+      description: all customer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /fetchAllSubscription:
+    description: Fetching all subscriptions
+    get:
+      description: list subscription
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        400:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /insertSubscription:
+    description: Inserting Subscription details
+    post:
+      summary: inserting new Subscription
+      requestBody:
+        $ref: '#/components/requestBodies/SubscriptionBody'
+      responses:
+        200:
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        400:
+          $ref: '#/components/responses/BadRequest'
+
+#---------------------------------COMPONENTS --------------------------------
+components:
+  #___________________RRESPONSES
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  #___________________REQUEST BODY
+  requestBodies:
+    SubscriptionBody:
+      description: A JSON object Contenting Subscription information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Subscription'
+
+    CustomerBody:
+      description: A JSON object Contenting Customer information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Customer'
+
+  #___________________SCHEMAS
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          title: string
+      required:
+        - code
+        - message
+    employee:
+      type: object
+      required:
+        - employeeName
+        - salary
+        - emailId
+        - mobile
+      properties:
+        employeeId:
+          type: integer
+          example: 1
+        employeeName:
+          type: string
+          example: Ajay Kate
+          pattern: '^[a-zA-Z]+(\s[a-zA-Z]+)?$'
+        salary:
+          type: number
+          example: 57000.00
+        emailId:
+          type: string
+          example: ajay@gmail.com
+          pattern: '^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$'
+        mobile:
+          type: string
+          example: 9876543210
+          pattern: '^[0-9]{10}$'
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          example: aj
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        locale:
+          type: string
+        object:
+          type: string
+        billing_address:
+          type: object
+
+    Billing_address:
+      type: object
+      properties:
+        id:
+          type: number
+        first_name:
+          type: string
+        last_name:
+          type: string
+        line1:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zip:
+          type: string
+        object:
+          type: string
+
+    Items:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        external_name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        resource_version:
+          type: number
+        updated_at:
+          type: number
+        item_family_id:
+          type: string
+        type:
+          type: string
+        is_shippable:
+          type: boolean
+        is_giftable:
+          type: boolean
+        enabled_for_checkout:
+          type: boolean
+        enabled_in_portal:
+          type: boolean
+        item_applicability:
+          type: string
+        metered:
+          type: boolean
+        channel:
+          type: string
+        object:
+          type: string
+
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: string
+        product_name:
+          type: string
+        created_at:
+          type: string
+        product_code:
+          type: string
+        deleted:
+          type: boolean
+        product_price:
+          type: number
+        object:
+          type: string
+        status:
+          type: string
+        updated_at:
+          type: string
+
+    subscription_items:
+      type: object
+      properties:
+        id:
+          type: number
+        amount:
+          type: number
+        billing_cycles:
+          type: integer
+        free_quantity:
+          type: integer
+        item_price_id:
+          type: string
+        item_type:
+          type: string
+        object:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: string
+        activated_at:
+          type: string
+        billing_period:
+          type: integer
+        billing_period_unit:
+          type: string
+        created_at:
+          type: string
+        currency_code:
+          type: string
+        deleted:
+          type: boolean
+        object:
+          type: string
+        status:
+          type: string
+        total_dues:
+          type: number
+        updated_at:
+          type: number
+        product_code:
+          type: string
+        subscription_items:
+          type: object
+        items:
+          type: object
+        product:
+          type: object
+        customer:
+          type: object
